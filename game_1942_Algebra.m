@@ -11,20 +11,20 @@ wall_sprite = 555;
 
 % Size of the game
 NUM_ROWS = 20;
-NUM_COLS = 30;
+NUM_COLS = 40; % 30-> Game screen, 10-> qn screen
 
 % Create the game scene
-game_scene = simpleGameEngine("retro_pack.png", 16, 16, 10, [45, 45, 45]);
+game_scene = simpleGameEngine("retro_pack.png", 16, 16, 20, [45, 45, 45]);
 
 % Create the game
 world = blank_sprite * ones(NUM_ROWS, NUM_COLS);
 
 % Create a basic wall in the perimeter
 
-for row = 1:NUM_COLS
+for row = 1:NUM_ROWS
     for col = 1: NUM_COLS
         % Check boundary conditions
-        is_edge = (row == 1) || (row ==  NUM_COLS) || (col == 1) || (col == NUM_COLS);
+        is_edge = (row == 1) || (row ==  NUM_ROWS) || (col == 1) || (col == NUM_COLS);
 
         % Assign wall_sprite
         if is_edge
@@ -32,4 +32,8 @@ for row = 1:NUM_COLS
         end
     end
 end
+
+% Add wall to seperate game and qn screen
+world(:, 30) = wall_sprite;
+
 drawScene(game_scene, world);
