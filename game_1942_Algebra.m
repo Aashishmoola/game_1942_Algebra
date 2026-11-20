@@ -12,32 +12,27 @@ player_sprite = 243;
 proj_sprite = 12 * 32 + 13;
 enemy_sprite = 23 * 32 + 16;
 
+SCREEN = get(0, "ScreenSize");
+SCREEN_W = SCREEN(3);
+SCREEN_H = SCREEN(4);
+
 % Size of the game
-NUM_ROWS = 20;
-NUM_COLS = 20;
+NUM_ROWS = 40;
+NUM_COLS = 40;
+DIVIDER_COL = round(0.75 * NUM_COLS);
+
+% Sprite size
+SPRITE_W_PX = 16;
+SPRITE_H_PX = 16;
+SPRITE_SCALE_F = 2;
+BG_COLOR = [45, 45, 45];
+
 
 % Create the game scene
-game_scene = simpleGameEngine("resources/retro_pack.png", 16, 16, 10, [45, 45, 45]);
+game_scene = simpleGameEngine("resources/retro_pack.png", SPRITE_H_PX, SPRITE_W_PX, SPRITE_SCALE_F, BG_COLOR);
 
 % Create the game
 world = blank_sprite * ones(NUM_ROWS, NUM_COLS);
-
-% Create a basic wall in the perimeter
-
-for row = 1:NUM_COLS
-    for col = 1: NUM_COLS
-        % Check boundary conditions
-        is_edge = (row == 1) || (row ==  NUM_COLS) || (col == 1) || (col == NUM_COLS);
-
-        % Assign wall_sprite
-        if is_edge
-            world(row, col) = wall_sprite;
-        end
-    end
-end
-
-% Add divider between parts of the game
-world(:, 15) = wall_sprite;
 
 player_position = 3;
 
@@ -50,6 +45,7 @@ proj_exists = true;
 world(proj_row, proj_col) = proj_sprite;
 world(3,4) = enemy_sprite;
 
+world = addPerimeterWall(world, wall_sprite, NUM_ROWS, NUM_COLS, DIVIDER_COL);
 drawScene(game_scene, world);
 
 % Timing: how often the projectile steps, and how long each frame waits
@@ -106,6 +102,18 @@ while true
     pause(FRAME_SECONDS);
 end
 
+function world = addPerimeterWall(world, wall_sprite, num_rows, num_cols, divider_col)
+    % Create a basic wall in the perimeter
+    world(1, :)        = wall_sprite;
+    world(num_rows, :) = wall_sprite;
+    world(:, 1)        = wall_sprite;
+    world(:, num_cols) = wall_sprite;
+
+    % Add divider between parts of the game
+    world(:, divider_col) = wall_sprite;
+end
+
+
 
 % Function to move player
 function result = move_player(distance, position, world, wall_sprite)
@@ -129,3 +137,5 @@ function [new_row, exists] = move_projectile(proj_row, proj_col, world, wall_spr
         exists = false;
     end
 end
+
+
