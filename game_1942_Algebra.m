@@ -17,7 +17,7 @@ NUM_ROWS = 20;
 NUM_COLS = 20;
 
 % Create the game scene
-game_scene = simpleGameEngine("retro_pack.png", 16, 16, 10, [45, 45, 45]);
+game_scene = simpleGameEngine("resources/retro_pack.png", 16, 16, 10, [45, 45, 45]);
 
 % Create the game
 world = blank_sprite * ones(NUM_ROWS, NUM_COLS);
